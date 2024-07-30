@@ -1,0 +1,10 @@
+#create react-vite app
+npm create vite
+
+#run app
+npm run dev
+
+
+#search and kill the port.
+netstat -ano | findstr :<yourPortNumber>
+taskkill /PID <typeyourPIDhere> /F
