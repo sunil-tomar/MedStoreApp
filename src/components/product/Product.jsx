@@ -1,14 +1,20 @@
 import { useState, useContext, useEffect } from "react";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import Box from "@mui/material/Box";
+import {
+  TableContainer,
+  Table,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+  IconButton,
+  Dialog,
+  DialogContent,
+  Box,
+  Typography,
+  Button,
+} from "@mui/material";
+import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
 import { createData, MedList as MedsList } from "./../../store/store";
 
 const fetchMeds = async () => {
@@ -92,7 +98,7 @@ export default function Product() {
         <TableBody>
           {medsDataList.map((row, i) => {
             let itemSold = row.qty == "6" ? "grey" : "";
-            console.log("itemSold color : " + itemSold);
+            // console.log("itemSold color : " + itemSold);
             return (
               <TableRow
                 key={row.name + i}
