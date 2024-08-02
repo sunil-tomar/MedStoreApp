@@ -16,23 +16,8 @@ import {
 } from "@mui/material";
 import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
 import { createData, MedList as MedsList } from "./../../store/store";
-
-const fetchMeds = async () => {
-  let newMedsList = [];
-  await fetch("https://dummyjson.com/products?limit=194")
-    .then((res) => {
-      if (res.status != "200") throw new Error(res);
-      return res.json();
-    })
-    .then((obj) => {
-      console.log(obj);
-      const prodS = obj.products;
-      newMedsList = [...newMedsList, ...prodS];
-      return newMedsList;
-    })
-    .catch((error) => console.error(error));
-  return newMedsList;
-};
+import { getAPICall } from "../../store/apiCall";
+import { URL_FETCH_MEDS_LIST } from "../../store/CONSTANT";
 
 const convertProdDataToMeds = (newMedsList) => {
   let convertProd = [];
@@ -58,8 +43,8 @@ export default function Product() {
 
   useEffect(() => {
     // fetchData from server;
-    const newMedList = fetchMeds().then((respData) => {
-      const convertProd = convertProdDataToMeds(respData);
+    const newMedList = getAPICall(URL_FETCH_MEDS_LIST).then((respData) => {
+      const convertProd = convertProdDataToMeds(respData.products);
       setMedsDataList((data) => {
         const newData = [...data, ...convertProd];
         console.log("newData length : " + newData.length);
@@ -111,7 +96,7 @@ export default function Product() {
                 style={{ backgroundColor: itemSold }}
               >
                 <TableCell component="th" scope="row">
-                  {i}
+                  {i+1}
                 </TableCell>
                 <TableCell align="right">{row.name}</TableCell>
                 <TableCell align="right">{row.price}</TableCell>
