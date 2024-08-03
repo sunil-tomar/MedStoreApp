@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Product from "./components/product/Product";
-import ProductTable from "./components/product/ProductTable";
 import Login from "./components/Login/Login";
 import AuthProvider from "./context/AuthProvider";
 import PrivateRoute from "./Route/PrivateRoute";
@@ -16,12 +15,9 @@ export default function App() {
       <Router>
         <AuthProvider>
           <Routes>
+            <Route path="/" element={<PrivateRoute />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Product />} />
             <Route path="/product" element={<Product />} />
-            <Route element={<PrivateRoute />}>
-              <Route path="/prod" element={<ProductTable />} />
-            </Route>
           </Routes>
         </AuthProvider>
       </Router>
