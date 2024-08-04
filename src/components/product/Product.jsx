@@ -38,20 +38,27 @@ const convertProdDataToMeds = (newMedsList) => {
 export default function Product() {
   const { medList } = useContext(MedsList);
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [medsDataList, setMedsDataList] = useState(medList);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
   useEffect(() => {
     // fetchData from server;
     const newMedList = getAPICall(URL_FETCH_MEDS_LIST).then((respData) => {
-      const convertProd = convertProdDataToMeds(respData.products);
-      setMedsDataList((data) => {
-        const newData = [...data, ...convertProd];
-        console.log("newData length : " + newData.length);
-        return newData;
-      });
+      setIsLoading(true);
+      try {
+        const convertProd = convertProdDataToMeds(respData.products);
+        setMedsDataList((data) => {
+          const newData = [...data, ...convertProd];
+          console.log("newData length : " + newData.length);
+          return newData;
+        });
+      } catch (error) {
+      } finally {
+        //setIsLoading(false);
+      }
     });
-  }, []);
+  }, [isLoading]);
 
   const handleClose = () => {
     setOpen(false);
@@ -96,7 +103,7 @@ export default function Product() {
                 style={{ backgroundColor: itemSold }}
               >
                 <TableCell component="th" scope="row">
-                  {i+1}
+                  {i + 1}
                 </TableCell>
                 <TableCell align="right">{row.name}</TableCell>
                 <TableCell align="right">{row.price}</TableCell>

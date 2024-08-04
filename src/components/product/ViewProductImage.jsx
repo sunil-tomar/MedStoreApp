@@ -4,7 +4,7 @@ import DialogContent from "@mui/material/DialogContent";
 //import Image from "next/image"; // or any image component
 
 export default function ViewProductImage({ imgUrl, open, handleClose }) {
-  debugger;
+  //debugger;
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>

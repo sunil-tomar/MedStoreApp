@@ -1,28 +1,27 @@
 import { useContext, createContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { LogoutPage } from "../components/Login/LogoutPage";
+import { URL_SERVER_LOGIN } from "../store/CONSTANT";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
+  // debugger;
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("site") || "");
+  const [profileImg, setProfileImg] = useState(
+    localStorage.getItem("image") || ""
+  );
   const navigate = useNavigate();
   const loginAction = async (data) => {
     console.log(data);
 
-    // const fetchCall = await fetch("https://dummyjson1.com/auth/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(data),
-    // });
-
-    return await fetch("https://dummyjson.com/auth/login", {
+    return await fetch(URL_SERVER_LOGIN, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     })
       .then((res) => {
-        debugger;
         if (res.status != "200") throw new Error(res);
         if (
           res == null ||
@@ -38,7 +37,7 @@ const AuthProvider = ({ children }) => {
       .then((res) => {
         console.log(res);
         setUserSessionData(res);
-        navigate("/");
+        navigate("/product");
         return;
       })
       .catch((error) => console.error(error));
@@ -51,6 +50,7 @@ const AuthProvider = ({ children }) => {
       setToken(res.refreshToken);
       localStorage.setItem("site", res.token);
       localStorage.setItem("image", res.image);
+      setProfileImg(res.image);
     } catch (err) {
       throw err;
     }
@@ -63,24 +63,10 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("image");
     navigate("/login");
   };
-  const getUserImage = () => {
-    console.log("image path : " + localStorage.getItem("image"));
-    return localStorage.getItem("image");
-  };
+
   return (
     <AuthContext.Provider value={{ token, user, loginAction, logOut }}>
-      <div>
-        <span>
-          <img
-            src={getUserImage()}
-            alt="User Image"
-            style={{ height: "8rem", width: "8rem", float: "left" }}
-          />
-        </span>
-        <span onClick={logOut} style={{ color: "red", float: "right" }}>
-          logOut
-        </span>
-      </div>
+      {token != "" && <LogoutPage imgUrl={profileImg} logOut={logOut} />}
       {children}
     </AuthContext.Provider>
   );
