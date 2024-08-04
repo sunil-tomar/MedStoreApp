@@ -5,6 +5,9 @@ import AuthProvider from "./context/AuthProvider";
 import PrivateRoute from "./Route/PrivateRoute";
 import { createContext, useEffect, useState } from "react";
 import MedListProvider from "./store/store";
+import ProductPagination from "./components/product/ProductPagination";
+import ProductBilling from "./components/product/ProductBilling";
+import { LOGIN_PAGE, WELCOME_PAGE } from "./store/ComponentName";
 
 export default function App() {
   const ProductListContext = createContext();
@@ -16,9 +19,10 @@ export default function App() {
         <AuthProvider>
           <Routes>
             <Route element={<PrivateRoute />} />
-            <Route path="/" element={<Product />} />
+            <Route path={WELCOME_PAGE} element={<ProductBilling />} />
+            <Route path="/product-pagination" element={<ProductPagination />} />
             <Route path="/product" element={<Product />} />
-            <Route path="/login" element={<Login />} />
+            <Route path={LOGIN_PAGE} element={<Login />} />
           </Routes>
         </AuthProvider>
       </Router>

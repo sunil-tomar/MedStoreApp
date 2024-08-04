@@ -16,3 +16,6 @@ taskkill /PID <typeyourPIDhere> /F
 #url: localhost:5432
 #db : mydb
 
+#task 
+1. search box for products.
+2. 

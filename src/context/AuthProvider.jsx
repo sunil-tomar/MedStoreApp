@@ -2,6 +2,7 @@ import { useContext, createContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LogoutPage } from "../components/Login/LogoutPage";
 import { URL_SERVER_LOGIN } from "../store/CONSTANT";
+import { LOGIN_PAGE, WELCOME_PAGE } from "../store/ComponentName";
 
 const AuthContext = createContext();
 
@@ -37,7 +38,7 @@ const AuthProvider = ({ children }) => {
       .then((res) => {
         console.log(res);
         setUserSessionData(res);
-        navigate("/product");
+        navigate(WELCOME_PAGE);
         return;
       })
       .catch((error) => console.error(error));
@@ -61,7 +62,7 @@ const AuthProvider = ({ children }) => {
     setToken("");
     localStorage.removeItem("site");
     localStorage.removeItem("image");
-    navigate("/login");
+    navigate(LOGIN_PAGE);
   };
 
   return (
