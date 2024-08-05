@@ -4,7 +4,10 @@ import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 // ref   https://mui.com/material-ui/react-text-field/
-export const SearchBox = () => {
+export const SearchBox = ({
+  handleProductNameSearch,
+  handleProductNameSearchClick,
+}) => {
   return (
     <Paper
       component="form"
@@ -13,10 +16,11 @@ export const SearchBox = () => {
       <InputBase
         sx={{ ml: 1, flex: 1 }}
         placeholder="Search Google Maps"
-        inputProps={{ "aria-label": "search google maps" }}
+        inputProps={{ "aria-label": "search product name" }}
+        onKeyUp={(e) => handleProductNameSearch(e.target.value)}
       />
       <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-        <SearchIcon />
+        <SearchIcon onClick={handleProductNameSearchClick} />
       </IconButton>
     </Paper>
   );
