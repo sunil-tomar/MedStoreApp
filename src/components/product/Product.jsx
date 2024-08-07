@@ -66,6 +66,7 @@ export default function Product() {
     const startIndex = page * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
     setMedsDataList(serverData.slice(startIndex, endIndex));
+    return;
   };
   const handleProductNameSearch = (productNameSearch) => {
     console.debug(
@@ -89,10 +90,7 @@ export default function Product() {
 
     setMedsDataList(serverData.filter(prodNameSearchPredicate));
   };
-  const handleProductNameSearchClick = () => {
-     setProductNameSearch("");
-    updateProductRecord(); //updating record in prod table
-  };
+
 
   useEffect(() => {
     // fetchData from server;
@@ -151,7 +149,6 @@ export default function Product() {
     <>
       <SearchBox
         handleProductNameSearch={handleProductNameSearch}
-        handleProductNameSearchClick={handleProductNameSearchClick}
       />
       <Paper sx={{ width: "100%" }}>
         <TableContainer component={Paper}>

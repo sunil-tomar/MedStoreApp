@@ -1,11 +1,15 @@
-import * as React from "react";
 import { Paper, InputBase, IconButton } from "@mui/material";
-import { Search as SearchIcon, Clear as ClearIcon } from "@mui/icons-material";
-// ref   https://mui.com/material-ui/react-text-field/
-export const SearchBox = ({
-  handleProductNameSearch,
-  handleProductNameSearchClick,
-}) => {
+import { Search as SearchIcon } from "@mui/icons-material";
+
+/**
+ *   reference link :   https://mui.com/material-ui/react-text-field/
+ */
+export const SearchBox = ({ handleProductNameSearch }) => {
+  const handleProdSearchNameChange = (searchedText) => {
+    console.log("product name change --search val : " + searchedText);
+    handleProductNameSearch(searchedText);
+  };
+
   return (
     <Paper
       component="form"
@@ -13,16 +17,11 @@ export const SearchBox = ({
     >
       <InputBase
         sx={{ ml: 1, flex: 1 }}
-        placeholder="Search Google Maps"
+        placeholder="Search Product Name"
         inputProps={{ "aria-label": "search product name" }}
-        onKeyUp={(e) => handleProductNameSearch(e.target.value)}
+        onKeyUp={(e) => handleProdSearchNameChange(e.target.value)}
       />
-      <IconButton
-        type="button"
-        sx={{ p: "10px" }}
-        aria-label="search"
-        onClick={handleProductNameSearchClick}
-      >
+      <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
         <SearchIcon />
       </IconButton>
     </Paper>
