@@ -68,7 +68,9 @@ export default function Product() {
     setMedsDataList(serverData.slice(startIndex, endIndex));
   };
   const handleProductNameSearch = (productNameSearch) => {
-    console.debug(" searched product : " + productNameSearch);
+    console.debug(
+      " searched product : ( " + productNameSearch + " )in product table"
+    );
     setProductNameSearch(productNameSearch);
 
     //if product search is "" or empty update table again.
@@ -146,7 +148,9 @@ export default function Product() {
       <Paper sx={{ width: "100%" }}>
         <TableContainer component={Paper}>
           <center>
-            <b>Meds Store</b>
+            <b>
+              <h2>Meds Store</h2>
+            </b>
           </center>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -202,7 +206,7 @@ export default function Product() {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
+          rowsPerPageOptions={[5, 10, 25, 100]}
           component="div"
           count={serverData.length}
           rowsPerPage={rowsPerPage}
