@@ -17,8 +17,13 @@ export const SearchBox = ({
         inputProps={{ "aria-label": "search product name" }}
         onKeyUp={(e) => handleProductNameSearch(e.target.value)}
       />
-      <IconButton type="button" sx={{ p: "10px" }} aria-label="search">
-        <SearchIcon onClick={handleProductNameSearchClick} />
+      <IconButton
+        type="button"
+        sx={{ p: "10px" }}
+        aria-label="search"
+        onClick={handleProductNameSearchClick}
+      >
+        <SearchIcon />
       </IconButton>
     </Paper>
   );
