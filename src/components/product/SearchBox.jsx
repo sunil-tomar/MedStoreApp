@@ -1,8 +1,6 @@
 import * as React from "react";
-import Paper from "@mui/material/Paper";
-import InputBase from "@mui/material/InputBase";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
+import { Paper, InputBase, IconButton } from "@mui/material";
+import { Search as SearchIcon, Clear as ClearIcon } from "@mui/icons-material";
 // ref   https://mui.com/material-ui/react-text-field/
 export const SearchBox = ({
   handleProductNameSearch,
