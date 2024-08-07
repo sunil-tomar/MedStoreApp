@@ -7,36 +7,19 @@ import {
   TableRow,
   TableCell,
   Paper,
-  IconButton,
   Dialog,
   DialogContent,
   Box,
-  Typography,
-  Button,
   TablePagination,
 } from "@mui/material";
-import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
 import { createData, MedList as MedsList } from "./../../store/store";
 import { getAPICall } from "../../store/apiCall";
 import { URL_FETCH_MEDS_LIST } from "../../store/CONSTANT";
 import { SearchBox } from "./SearchBox";
+import { convertProdDataToMeds } from "../../utils/CommomMapper";
+import { FILTER_PROD_NAME_SEARCH } from "../../utils/CommonFilter";
+import ViewProductImage from "./ViewProductImage";
 
-const convertProdDataToMeds = (newMedsList) => {
-  let convertProd = [];
-  newMedsList.forEach((prod) => {
-    convertProd.push(
-      createData(
-        prod.title,
-        prod.price,
-        prod.stock,
-        "Capsule",
-        "anytime",
-        prod.images[0]
-      )
-    );
-  });
-  return convertProd;
-};
 export default function Product() {
   //Data
   const { medList } = useContext(MedsList);
@@ -46,7 +29,7 @@ export default function Product() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [productNameSearch, setProductNameSearch] = useState("");
   //Profile Image
-  const [open, setOpen] = useState(false);
+  const [openImageViewDialog, setOpenImageViewDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
@@ -76,21 +59,18 @@ export default function Product() {
 
     //if product search is "" or empty update table again.
     if (
-      productNameSearch === "" ||
       productNameSearch === undefined ||
-      productNameSearch.length === 0
-    )
+      (productNameSearch === "" && productNameSearch.length === 0)
+    ) {
       return updateProductRecord(); //updating record in prod table
+    }
 
-    //predicate for name match.
-    const prodNameSearchPredicate = (prod) =>
-      productNameSearch === ""
-        ? prod
-        : prod.name.toLowerCase().includes(productNameSearch.toLowerCase());
-
-    setMedsDataList(serverData.filter(prodNameSearchPredicate));
+    setMedsDataList(
+      serverData.filter((prod) =>
+        FILTER_PROD_NAME_SEARCH(prod, productNameSearch)
+      )
+    );
   };
-
 
   useEffect(() => {
     // fetchData from server;
@@ -100,56 +80,28 @@ export default function Product() {
         const convertProd = convertProdDataToMeds(respData.products);
         setServerData(convertProd);
         console.log("newData length : " + convertProd.length);
-        // setMedsDataList([...convertProd]);
         updateProductRecord(); //updating record in prod table
       } catch (error) {
+        console.log(error);
       } finally {
         //setIsLoading(false);
       }
     });
   }, [isLoading]);
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleImageViewClose = () => {
+    setOpenImageViewDialog(false);
     setSelectedImageUrl("");
   };
 
-  const handleImageView = (event, imgUrl) => {
-    console.log(event.target.value);
+  const handleImageViewOpen = (imgUrl) => {
     setSelectedImageUrl(imgUrl);
-    setOpen(true);
+    setOpenImageViewDialog(true);
   };
 
-  const showProductImg = () => {
-    return (
-      <Dialog open={open} onClose={handleClose}>
-        <DialogContent
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Box sx={{ width: "600", height: "600", position: "relative" }}>
-            <img
-              src={selectedImageUrl}
-              alt="Image"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-            />
-          </Box>
-        </DialogContent>
-      </Dialog>
-    );
-  };
   return (
     <>
-      <SearchBox
-        handleProductNameSearch={handleProductNameSearch}
-      />
+      <SearchBox handleProductNameSearch={handleProductNameSearch} />
       <Paper sx={{ width: "100%" }}>
         <TableContainer component={Paper}>
           <center>
@@ -171,12 +123,8 @@ export default function Product() {
             </TableHead>
             <TableBody>
               {medsDataList
-                .filter((row) =>
-                  productNameSearch === ""
-                    ? row
-                    : row.name
-                        .toLowerCase()
-                        .includes(productNameSearch.toLowerCase())
+                .filter((prod) =>
+                  FILTER_PROD_NAME_SEARCH(prod, productNameSearch)
                 )
                 .map((row, i) => {
                   let itemSold = row.qty == "6" ? "grey" : "";
@@ -189,7 +137,7 @@ export default function Product() {
                           border: 0,
                         },
                       }}
-                      onClick={(event) => handleImageView(event, row.img)}
+                      onClick={() => handleImageViewOpen(row.img)}
                       style={{ backgroundColor: itemSold }}
                     >
                       <TableCell component="th" scope="row">
@@ -207,7 +155,11 @@ export default function Product() {
                   );
                 })}
             </TableBody>
-            {showProductImg()}
+            <ViewProductImage
+              openImageViewDialog={openImageViewDialog}
+              handleImageViewClose={handleImageViewClose}
+              selectedImageUrl={selectedImageUrl}
+            />
           </Table>
         </TableContainer>
         <TablePagination
