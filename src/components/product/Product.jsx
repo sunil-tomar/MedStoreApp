@@ -74,7 +74,12 @@ export default function Product() {
     setProductNameSearch(productNameSearch);
 
     //if product search is "" or empty update table again.
-    if (productNameSearch === "") return updateProductRecord(); //updating record in prod table
+    if (
+      productNameSearch === "" ||
+      productNameSearch === undefined ||
+      productNameSearch.length === 0
+    )
+      return updateProductRecord(); //updating record in prod table
 
     //predicate for name match.
     const prodNameSearchPredicate = (prod) =>
@@ -84,7 +89,10 @@ export default function Product() {
 
     setMedsDataList(serverData.filter(prodNameSearchPredicate));
   };
-  const handleProductNameSearchClick = () => {};
+  const handleProductNameSearchClick = () => {
+     setProductNameSearch("");
+    updateProductRecord(); //updating record in prod table
+  };
 
   useEffect(() => {
     // fetchData from server;
