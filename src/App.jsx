@@ -19,7 +19,8 @@ export default function App() {
         <AuthProvider>
           <Routes>
             <Route element={<PrivateRoute />} />
-            <Route path={WELCOME_PAGE} element={<ProductBilling />} />
+            {/* <Route path={WELCOME_PAGE} element={<ProductBilling />} /> */}
+            <Route path={WELCOME_PAGE} element={<Product />} />
             <Route path="/product-pagination" element={<ProductPagination />} />
             <Route path="/product" element={<Product />} />
             <Route path={LOGIN_PAGE} element={<Login />} />
