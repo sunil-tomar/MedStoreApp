@@ -1,17 +1,31 @@
-import * as React from "react";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-//import Image from "next/image"; // or any image component
+import { Dialog, DialogContent, Box } from "@mui/material";
 
-export default function ViewProductImage({ imgUrl, open, handleClose }) {
-  //debugger;
+export default function ViewProductImage({
+  openImageViewDialog,
+  handleImageViewClose,
+  selectedImageUrl,
+}) {
   return (
-    <div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogContent>
-          <Image src={imageUrl} alt="Enlarged Image" layout="responsive" />
-        </DialogContent>
-      </Dialog>
-    </div>
+    <Dialog open={openImageViewDialog} onClose={handleImageViewClose}>
+      <DialogContent
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Box sx={{ width: "600", height: "600", position: "relative" }}>
+          <img
+            src={selectedImageUrl}
+            alt="Image"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+            }}
+          />
+        </Box>
+      </DialogContent>
+    </Dialog>
   );
 }
