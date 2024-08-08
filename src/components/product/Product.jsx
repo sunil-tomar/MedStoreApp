@@ -7,11 +7,12 @@ import {
   TableRow,
   TableCell,
   Paper,
-  Dialog,
-  DialogContent,
-  Box,
   TablePagination,
 } from "@mui/material";
+import {
+  DeleteForeverRounded as DeleteForeverRoundedIcon,
+  EditRounded as EditRoundedIcon,
+} from "@mui/icons-material";
 import { createData, MedList as MedsList } from "./../../store/store";
 import { getAPICall } from "../../store/apiCall";
 import { URL_FETCH_MEDS_LIST } from "../../store/CONSTANT";
@@ -19,6 +20,10 @@ import { SearchBox } from "./SearchBox";
 import { convertProdDataToMeds } from "../../utils/CommomMapper";
 import { FILTER_PROD_NAME_SEARCH } from "../../utils/CommonFilter";
 import ViewProductImage from "./ViewProductImage";
+
+/**
+ * This Component is design to show the products in table and do add/update/delete operations.
+ * */
 
 export default function Product() {
   //Data
@@ -32,6 +37,23 @@ export default function Product() {
   const [openImageViewDialog, setOpenImageViewDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
+
+  useEffect(() => {
+    // fetchData from server;
+    const newMedList = getAPICall(URL_FETCH_MEDS_LIST).then((respData) => {
+      setIsLoading(true);
+      try {
+        const convertProd = convertProdDataToMeds(respData.products);
+        setServerData(convertProd);
+        console.log("newData length : " + convertProd.length);
+        updateProductRecord(); //updating record in prod table
+      } catch (error) {
+        console.log(error);
+      } finally {
+        //setIsLoading(false);
+      }
+    });
+  }, [isLoading]);
 
   const handleChangePage = (event, newPage) => {
     console.debug(newPage);
@@ -72,23 +94,6 @@ export default function Product() {
     );
   };
 
-  useEffect(() => {
-    // fetchData from server;
-    const newMedList = getAPICall(URL_FETCH_MEDS_LIST).then((respData) => {
-      setIsLoading(true);
-      try {
-        const convertProd = convertProdDataToMeds(respData.products);
-        setServerData(convertProd);
-        console.log("newData length : " + convertProd.length);
-        updateProductRecord(); //updating record in prod table
-      } catch (error) {
-        console.log(error);
-      } finally {
-        //setIsLoading(false);
-      }
-    });
-  }, [isLoading]);
-
   const handleImageViewClose = () => {
     setOpenImageViewDialog(false);
     setSelectedImageUrl("");
@@ -102,6 +107,11 @@ export default function Product() {
   return (
     <>
       <SearchBox handleProductNameSearch={handleProductNameSearch} />
+      <ViewProductImage
+        openImageViewDialog={openImageViewDialog}
+        handleImageViewClose={handleImageViewClose}
+        selectedImageUrl={selectedImageUrl}
+      />
       <Paper sx={{ width: "100%" }}>
         <TableContainer component={Paper}>
           <center>
@@ -137,7 +147,6 @@ export default function Product() {
                           border: 0,
                         },
                       }}
-                      onClick={() => handleImageViewOpen(row.img)}
                       style={{ backgroundColor: itemSold }}
                     >
                       <TableCell component="th" scope="row">
@@ -148,18 +157,16 @@ export default function Product() {
                       <TableCell align="right">{row.qty}</TableCell>
                       <TableCell align="right">{row.med_type}</TableCell>
                       <TableCell align="right">{row.schedule_type}</TableCell>
-                      <TableCell align="right">
+                      <TableCell
+                        align="right"
+                        onClick={() => handleImageViewOpen(row.img)}
+                      >
                         <img src={row.img} style={{ height: "40px" }} />
                       </TableCell>
                     </TableRow>
                   );
                 })}
             </TableBody>
-            <ViewProductImage
-              openImageViewDialog={openImageViewDialog}
-              handleImageViewClose={handleImageViewClose}
-              selectedImageUrl={selectedImageUrl}
-            />
           </Table>
         </TableContainer>
         <TablePagination
