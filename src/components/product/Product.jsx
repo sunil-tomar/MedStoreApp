@@ -20,6 +20,7 @@ import { SearchBox } from "./SearchBox";
 import { convertProdDataToMeds } from "../../utils/CommomMapper";
 import { FILTER_PROD_NAME_SEARCH } from "../../utils/CommonFilter";
 import ViewProductImage from "./ViewProductImage";
+import EditProductModel from "./EditProductModel";
 
 /**
  * This Component is design to show the products in table and do add/update/delete operations.
@@ -37,6 +38,8 @@ export default function Product() {
   const [openImageViewDialog, setOpenImageViewDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
+  const [editProductModal, setEditProductModal] = useState(false);
+  const [product, setProduct] = useState();
 
   useEffect(() => {
     // fetchData from server;
@@ -104,6 +107,18 @@ export default function Product() {
     setOpenImageViewDialog(true);
   };
 
+  const handleProductEditModel = (prod) => {
+    console.debug("entered into handleProductEditModel : " + { prod });
+    console.debug(prod);
+    setProduct(prod);
+    setEditProductModal(true);
+    console.debug("exiting from handleProductEditModel 2: " + { product });
+    console.debug(product);
+  };
+
+  const handleProductDeleteModel = (prod) => {
+    alert("are you sure to delete this product : " + prod.name);
+  };
   return (
     <>
       <SearchBox handleProductNameSearch={handleProductNameSearch} />
@@ -111,6 +126,12 @@ export default function Product() {
         openImageViewDialog={openImageViewDialog}
         handleImageViewClose={handleImageViewClose}
         selectedImageUrl={selectedImageUrl}
+      />
+      <EditProductModel
+        product={product}
+        setProduct={setProduct}
+        editProductModal={editProductModal}
+        setEditProductModal={setEditProductModal}
       />
       <Paper sx={{ width: "100%" }}>
         <TableContainer component={Paper}>
@@ -129,6 +150,7 @@ export default function Product() {
                 <TableCell align="right">Meds Type</TableCell>
                 <TableCell align="right">Schedule Type</TableCell>
                 <TableCell align="right">Image</TableCell>
+                <TableCell align="right">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -162,6 +184,22 @@ export default function Product() {
                         onClick={() => handleImageViewOpen(row.img)}
                       >
                         <img src={row.img} style={{ height: "40px" }} />
+                      </TableCell>
+                      <TableCell align="right">
+                        <span>
+                          <EditRoundedIcon
+                            onClick={() => handleProductEditModel(row)}
+                            sx={{ fontSize: "50px", color: "blue" }}
+                          />
+                          <DeleteForeverRoundedIcon
+                            onClick={() => handleProductDeleteModel(row)}
+                            sx={{
+                              marginLeft: "20px",
+                              fontSize: "40px",
+                              color: "red",
+                            }}
+                          />
+                        </span>
                       </TableCell>
                     </TableRow>
                   );
